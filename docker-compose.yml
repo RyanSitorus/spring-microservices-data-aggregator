@@ -50,7 +50,7 @@ services:
         condition: service_healthy
     volumes:
       - ./docker/redis:/data:ro
-    command: ["python", "/data/seed.py"]
+    command: ["python", "-u", "/data/seed.py"]
     networks:
       - aggregator-net
 
