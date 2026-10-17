@@ -42,7 +42,7 @@ services:
       - aggregator-net
 
   redis-seed:
-    image: redis:7-alpine
+    image: python:3.11-alpine
     container_name: aggregator-redis-seed
     restart: "no"
     depends_on:
@@ -50,7 +50,7 @@ services:
         condition: service_healthy
     volumes:
       - ./docker/redis:/data:ro
-    entrypoint: ["/bin/sh", "-c", "redis-cli -h redis < /data/seed.redis"]
+    command: ["python", "/data/seed.py"]
     networks:
       - aggregator-net
 
