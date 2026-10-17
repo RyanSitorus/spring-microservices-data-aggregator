@@ -1,0 +1,88 @@
+services:
+  # =========================================================================
+  # Database & Cache Infrastructure Services
+  # =========================================================================
+  postgres:
+    image: postgres:16-alpine
+    container_name: aggregator-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: aggregator_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres123
+    ports:
+      # Map host 5433 to container 5432 to prevent conflict with local Windows PostgreSQL
+      - "5433:5432"
+    volumes:
+      - ./docker/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d aggregator_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - aggregator-net
+
+  redis:
+    image: redis:7-alpine
+    container_name: aggregator-redis
+    restart: unless-stopped
+    ports:
+      # Map host 6380 to container 6379 to prevent conflict with local Windows Redis
+      - "6380:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - aggregator-net
+
+  # =========================================================================
+  # Application Microservices (Will be enabled in subsequent commits)
+  # =========================================================================
+  # api-gateway:
+  #   build: ./api-gateway
+  #   container_name: aggregator-gateway
+  #   ports:
+  #     - "8080:8080"
+  #   depends_on:
+  #     - api-1-json
+  #     - api-2-xml
+  #   networks:
+  #     - aggregator-net
+
+  # api-1-json:
+  #   build: ./api-1-json
+  #   container_name: aggregator-api-1
+  #   ports:
+  #     - "8081:8081"
+  #   depends_on:
+  #     postgres:
+  #       condition: service_healthy
+  #     redis:
+  #       condition: service_healthy
+  #   networks:
+  #     - aggregator-net
+
+  # api-2-xml:
+  #   build: ./api-2-xml
+  #   container_name: aggregator-api-2
+  #   ports:
+  #     - "8082:8082"
+  #   depends_on:
+  #     postgres:
+  #       condition: service_healthy
+  #   networks:
+  #     - aggregator-net
+
+networks:
+  aggregator-net:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  redis_data:
