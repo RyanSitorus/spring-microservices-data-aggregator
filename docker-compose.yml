@@ -28,6 +28,7 @@ services:
     image: redis:7-alpine
     container_name: aggregator-redis
     restart: unless-stopped
+    command: ["redis-server", "--bind", "0.0.0.0", "--protected-mode", "no"]
     ports:
       # Map host 6380 to container 6379 to prevent conflict with local Windows Redis
       - "6380:6379"
