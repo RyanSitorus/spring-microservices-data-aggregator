@@ -44,7 +44,7 @@ services:
       - aggregator-net
 
   # =========================================================================
-  # Application Microservices (Will be enabled in subsequent commits)
+  # Application Microservices
   # =========================================================================
   # api-gateway:
   #   build: ./api-gateway
@@ -52,23 +52,33 @@ services:
   #   ports:
   #     - "8080:8080"
   #   depends_on:
-  #     - api-1-json
-  #     - api-2-xml
+  #     - data-aggregator-service
+  #     - xml-feed-service
   #   networks:
   #     - aggregator-net
 
-  # api-1-json:
-  #   build: ./api-1-json
-  #   container_name: aggregator-api-1
-  #   ports:
-  #     - "8081:8081"
-  #   depends_on:
-  #     postgres:
-  #       condition: service_healthy
-  #     redis:
-  #       condition: service_healthy
-  #   networks:
-  #     - aggregator-net
+  data-aggregator-service:
+    build: ./data-aggregator-service
+    container_name: aggregator-api-1
+    restart: unless-stopped
+    ports:
+      - "8081:8081"
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: aggregator_db
+      DB_USER: postgres
+      DB_PASS: postgres123
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      TODOS_URL: https://jsonplaceholder.typicode.com/todos
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - aggregator-net
 
   # api-2-xml:
   #   build: ./api-2-xml
