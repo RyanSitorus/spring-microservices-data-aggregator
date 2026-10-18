@@ -1,0 +1,27 @@
+### API Gateway Health Check
+GET http://localhost:8080/actuator/health
+Accept: application/json
+
+###
+
+### 1. Get All Aggregated Users (JSON)
+GET http://localhost:8080/api/v1/aggregate
+Accept: application/json
+
+###
+
+### 2. Get Single Aggregated User by ID (JSON)
+GET http://localhost:8080/api/v1/aggregate/1
+Accept: application/json
+
+###
+
+### 3. Get All Posts as XML Feed
+GET http://localhost:8080/api/v1/posts/xml
+Accept: application/xml
+
+###
+
+### 4. Get Posts as XML Feed Filtered by User ID
+GET http://localhost:8080/api/v1/posts/xml?userId=1
+Accept: application/xml

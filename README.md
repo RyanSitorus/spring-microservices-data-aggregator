@@ -75,18 +75,106 @@ All dummy data (100 posts in PostgreSQL and 10 users in Redis) will be automatic
 
 ### Verification Commands
 
-1. **Verify JSON Aggregator (via Gateway)**:
+1. **Automated Verification Script**:
    ```bash
-   curl -s http://localhost:8080/api/v1/aggregate/1
+   chmod +x test-endpoints.sh
+   ./test-endpoints.sh
    ```
 
-2. **Verify XML Feed (via Gateway)**:
-   ```bash
-   curl -s "http://localhost:8080/api/v1/posts/xml?userId=1"
-   ```
+2. **Using HTTP Client File**:
+   Open `requests.http` in VS Code (with REST Client extension) or IntelliJ IDEA and execute the preconfigured requests.
 
-3. **Verify Gateway Health**:
-   ```bash
-   curl -s http://localhost:8080/actuator/health
-   ```
+3. **Manual cURL Commands**:
+   - Verify JSON Aggregator (via Gateway):
+     ```bash
+     curl -s http://localhost:8080/api/v1/aggregate/1
+     ```
+   - Verify XML Feed (via Gateway):
+     ```bash
+     curl -s "http://localhost:8080/api/v1/posts/xml?userId=1"
+     ```
+   - Verify Gateway Health:
+     ```bash
+     curl -s http://localhost:8080/actuator/health
+     ```
+
+---
+
+## Sample Response Formats
+
+### JSON Aggregator Output (`/api/v1/aggregate/1`)
+
+```json
+{
+  "id": 1,
+  "name": "Leanne Graham",
+  "username": "Bret",
+  "email": "Sincere@april.biz",
+  "address": {
+    "street": "Kulas Light",
+    "suite": "Apt. 556",
+    "city": "Gwenborough",
+    "zipcode": "92998-3874",
+    "geo": {
+      "lat": "-37.3159",
+      "lng": "81.1496"
+    }
+  },
+  "phone": "1-770-736-8031 x56442",
+  "website": "hildegard.org",
+  "company": {
+    "name": "Romaguera-Crona",
+    "catchPhrase": "Multi-layered client-server neural-net",
+    "bs": "harness real-time e-markets"
+  },
+  "todos": [
+    {
+      "id": 1,
+      "title": "delectus aut autem",
+      "completed": false
+    }
+  ],
+  "posts": [
+    {
+      "id": 1,
+      "title": "sunt aut facere repellat provident occaecati excepturi optio reprehenderit",
+      "body": "quia et suscipit..."
+    }
+  ]
+}
+```
+
+### XML Feed Output (`/api/v1/posts/xml?userId=1`)
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+  <row>
+    <userId>1</userId>
+    <id>1</id>
+    <title>sunt aut facere repellat provident occaecati excepturi optio reprehenderit</title>
+    <body>quia et suscipit suscipit recusandae consequuntur expedita et cum reprehenderit molestia</body>
+  </row>
+  <row>
+    <userId>1</userId>
+    <id>2</id>
+    <title>qui est esse</title>
+    <body>est rerum tempore vitae...</body>
+  </row>
+</root>
+```
+
+---
+
+## Running Unit Tests
+
+To run unit tests across microservices:
+
+```bash
+# Test data-aggregator-service
+cd data-aggregator-service && mvn test
+
+# Test xml-feed-service
+cd ../xml-feed-service && mvn test
+```
 
