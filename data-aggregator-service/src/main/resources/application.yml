@@ -9,7 +9,10 @@ spring:
     username: ${DB_USER:postgres}
     password: ${DB_PASS:postgres123}
     driver-class-name: org.postgresql.Driver
+    hikari:
+      initialization-fail-timeout: 60000
   jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: none
     open-in-view: false
