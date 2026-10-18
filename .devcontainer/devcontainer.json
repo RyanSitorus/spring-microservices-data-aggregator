@@ -1,0 +1,4 @@
+{
+  "name": "Spring Microservices Data Aggregator",
+  "postStartCommand": "sudo iptables-legacy -I DOCKER-USER 1 -j ACCEPT 2>/dev/null || true && sudo iptables-legacy -I FORWARD 1 -j ACCEPT 2>/dev/null || true"
+}

@@ -46,16 +46,20 @@ services:
   # =========================================================================
   # Application Microservices
   # =========================================================================
-  # api-gateway:
-  #   build: ./api-gateway
-  #   container_name: aggregator-gateway
-  #   ports:
-  #     - "8080:8080"
-  #   depends_on:
-  #     - data-aggregator-service
-  #     - xml-feed-service
-  #   networks:
-  #     - aggregator-net
+  api-gateway:
+    build: ./api-gateway
+    container_name: aggregator-gateway
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      AGGREGATOR_SERVICE_URL: http://data-aggregator-service:8081
+      XML_FEED_SERVICE_URL: http://xml-feed-service:8082
+    depends_on:
+      - data-aggregator-service
+      - xml-feed-service
+    networks:
+      - aggregator-net
 
   data-aggregator-service:
     build: ./data-aggregator-service
